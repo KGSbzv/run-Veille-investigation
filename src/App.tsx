@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Outlet, Navigate, useNavigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import DashboardPage from './pages/DashboardPage';
 import CasesPage from './pages/CasesPage';
@@ -8,6 +8,7 @@ import WatchlistsPage from './pages/WatchlistsPage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { UserRole } from './types';
 import Spinner from './components/ui/Spinner';
 import { OnboardingProvider } from './hooks/useOnboarding';
 import OnboardingTour from './components/onboarding/OnboardingTour';
@@ -39,6 +40,25 @@ const ProtectedLayout: React.FC = () => {
   );
 };
 
+const AdminRoute: React.FC = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    } else if (user.role !== UserRole.ADMIN) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
+  if (!user || user.role !== UserRole.ADMIN) {
+    return <FullScreenSpinner />;
+  }
+
+  return <AdminPage />;
+};
+
 const HomeRedirect: React.FC = () => {
     const navigate = useNavigate();
     React.useEffect(() => {
@@ -60,8 +80,9 @@ function App() {
               <Route path="/cases" element={<CasesPage />} />
               <Route path="/cases/:caseId" element={<CaseDetailPage />} />
               <Route path="/watchlists" element={<WatchlistsPage />} />
-              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/admin" element={<AdminRoute />} />
             </Route>
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </HashRouter>
         <OnboardingTour />

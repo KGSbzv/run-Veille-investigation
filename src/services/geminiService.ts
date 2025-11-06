@@ -1,10 +1,10 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { Message, MessageRole } from "../types";
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 if (!API_KEY) {
-  console.error("Gemini API key is not set. Please set the API_KEY environment variable.");
+  console.error("Gemini API key is not set. Please set VITE_GEMINI_API_KEY in .env.local");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY! });

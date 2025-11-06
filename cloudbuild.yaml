@@ -27,14 +27,12 @@ steps:
     - '--image=gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}'
     - '--region=${_REGION}'
     - '--platform=managed'
-    # Pour un déploiement public. Pour un service interne, utilisez '--no-allow-unauthenticated'
-    # et configurez les permissions IAM ou un Ingress.
     - '--allow-unauthenticated'
-    - '--port=80'
-    # Note sur les variables d'environnement (secrets) :
-    # Pour la production, la clé API Gemini doit être injectée de manière sécurisée.
-    # Utilisez Google Secret Manager. Exemple :
-    # - '--set-secrets=VITE_GEMINI_API_KEY=cacrs-gemini-key:latest'
+    - '--port=8080'
+    - '--memory=512Mi'
+    - '--cpu=1'
+    - '--max-instances=10'
+    - '--set-env-vars=NODE_ENV=production'
   id: 'Deploy'
 
 # Liste des images à conserver après le build.
@@ -44,7 +42,8 @@ images:
 # Variables de substitution personnalisables.
 substitutions:
   _SERVICE_NAME: 'cacrs-frontend'
-  _REGION: 'europe-west1' # Adaptez à votre région de prédilection.
+  _REGION: 'europe-west1'
 
 options:
   logging: CLOUD_LOGGING_ONLY
+  machineType: 'N1_HIGHCPU_8'

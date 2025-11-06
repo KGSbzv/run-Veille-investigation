@@ -32,12 +32,15 @@ const LoginPage: React.FC = () => {
     }
 
     try {
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        console.error("VITE_GOOGLE_CLIENT_ID not configured. Please set it in .env.local");
+        return;
+      }
+      
       // @ts-ignore
       google.accounts.id.initialize({
-        // IMPORTANT: The client_id must be configured in your Google Cloud project's OAuth 2.0 Client IDs.
-        // For security reasons, it should not be hardcoded here. It's assumed to be available
-        // in the execution environment where the Google script is loaded.
-        // We are omitting it here, relying on the environment configuration.
+        client_id: clientId,
         callback: loginWithGoogle,
         auto_select: true, // Automatically sign in the user if they have a session
       });
