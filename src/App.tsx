@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route, Outlet, Navigate, useNavigate } from 'react-router-dom';
-import Layout from './components/layout/Layout';
-import DashboardPage from './pages/DashboardPage';
-import CasesPage from './pages/CasesPage';
-import CaseDetailPage from './pages/CaseDetailPage';
-import WatchlistsPage from './pages/WatchlistsPage';
-import AdminPage from './pages/AdminPage';
-import LoginPage from './pages/LoginPage';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { UserRole } from './types';
 import Spinner from './components/ui/Spinner';
 import { OnboardingProvider } from './hooks/useOnboarding';
-import OnboardingTour from './components/onboarding/OnboardingTour';
+
+// Lazy load components for better performance
+const Layout = lazy(() => import('./components/layout/Layout'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const CasesPage = lazy(() => import('./pages/CasesPage'));
+const CaseDetailPage = lazy(() => import('./pages/CaseDetailPage'));
+const WatchlistsPage = lazy(() => import('./pages/WatchlistsPage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const OnboardingTour = lazy(() => import('./components/onboarding/OnboardingTour'));
 
 const FullScreenSpinner: React.FC = () => (
     <div className="min-h-screen flex items-center justify-center bg-dark-bg">
@@ -34,9 +36,11 @@ const ProtectedLayout: React.FC = () => {
   }
 
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <Suspense fallback={<FullScreenSpinner />}>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </Suspense>
   );
 };
 
