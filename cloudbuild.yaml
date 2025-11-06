@@ -1,0 +1,50 @@
+# Ce pipeline Cloud Build est conçu pour être déclenché par des commits sur un dépôt (ex: GitHub, Cloud Source Repositories).
+#
+# Prérequis :
+# 1. Activer les APIs Cloud Build, Cloud Run, et Container Registry sur votre projet GCP.
+# 2. Donner le rôle "Administrateur Cloud Run" et "Administrateur de l'espace de stockage" au compte de service Cloud Build.
+#    (Projet GCP -> IAM -> Chercher le compte de service se terminant par @cloudbuild.gserviceaccount.com)
+#
+steps:
+# 1. Construire l'image Docker de l'application frontend.
+# Le tag utilise des substitutions automatiques de Cloud Build ($PROJECT_ID, $COMMIT_SHA).
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}', '.']
+  id: 'Build'
+
+# 2. Pousser l'image construite vers Google Container Registry (GCR).
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}']
+  id: 'Push'
+
+# 3. Déployer la nouvelle image sur Google Cloud Run.
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    - 'run'
+    - 'deploy'
+    - '${_SERVICE_NAME}'
+    - '--image=gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}'
+    - '--region=${_REGION}'
+    - '--platform=managed'
+    # Pour un déploiement public. Pour un service interne, utilisez '--no-allow-unauthenticated'
+    # et configurez les permissions IAM ou un Ingress.
+    - '--allow-unauthenticated'
+    - '--port=80'
+    # Note sur les variables d'environnement (secrets) :
+    # Pour la production, la clé API Gemini doit être injectée de manière sécurisée.
+    # Utilisez Google Secret Manager. Exemple :
+    # - '--set-secrets=VITE_GEMINI_API_KEY=cacrs-gemini-key:latest'
+  id: 'Deploy'
+
+# Liste des images à conserver après le build.
+images:
+- 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}'
+
+# Variables de substitution personnalisables.
+substitutions:
+  _SERVICE_NAME: 'cacrs-frontend'
+  _REGION: 'europe-west1' # Adaptez à votre région de prédilection.
+
+options:
+  logging: CLOUD_LOGGING_ONLY

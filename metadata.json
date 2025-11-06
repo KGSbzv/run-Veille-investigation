@@ -1,0 +1,5 @@
+{
+  "name": "Veille & Investigation Élection 2026",
+  "description": "Une plateforme web sécurisée pour un centre gouvernemental d’analyse, permettant la veille, l’investigation OSINT, la gestion de dossiers d’enquêtes et l’analyse augmentée par IA avec Google Gemini.",
+  "requestFramePermissions": []
+}
