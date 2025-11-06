@@ -17,15 +17,15 @@ const Sidebar = () => {
         <h1 className="text-xl font-bold text-white tracking-wider">CACRS</h1>
       </div>
       <nav className="flex-1 space-y-2">
-        <NavLink to="/dashboard" className={navLinkClass}>
+        <NavLink to="/dashboard" className={navLinkClass} data-tour="dashboard">
           <HomeIcon className="w-5 h-5 mr-3" />
           Tableau de bord
         </NavLink>
-        <NavLink to="/cases" className={navLinkClass}>
+        <NavLink to="/cases" className={navLinkClass} data-tour="cases">
           <FolderIcon className="w-5 h-5 mr-3" />
           Dossiers d'enquête
         </NavLink>
-        <NavLink to="/watchlists" className={navLinkClass}>
+        <NavLink to="/watchlists" className={navLinkClass} data-tour="watchlists">
           <EyeIcon className="w-5 h-5 mr-3" />
           Veille & Findings
         </NavLink>

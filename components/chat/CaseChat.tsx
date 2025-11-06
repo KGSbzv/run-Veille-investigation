@@ -66,7 +66,7 @@ const CaseChat: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[70vh] bg-dark-card border border-gray-700 rounded-lg overflow-hidden">
+    <div className="flex flex-col h-[70vh] bg-dark-card border border-gray-700 rounded-lg overflow-hidden" data-tour="chat">
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         {messages.map((message) => (
           <div key={message.id} className={`flex items-start gap-3 ${message.role === MessageRole.USER ? 'justify-end' : ''}`}>
