@@ -12,6 +12,7 @@ const CasesPage = lazy(() => import('./pages/CasesPage'));
 const CaseDetailPage = lazy(() => import('./pages/CaseDetailPage'));
 const WatchlistsPage = lazy(() => import('./pages/WatchlistsPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
+const AdminServicesSettings = lazy(() => import('./pages/AdminServicesSettings'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const OnboardingTour = lazy(() => import('./components/onboarding/OnboardingTour'));
 
@@ -44,7 +45,7 @@ const ProtectedLayout: React.FC = () => {
   );
 };
 
-const AdminRoute: React.FC = () => {
+const AdminRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -60,7 +61,7 @@ const AdminRoute: React.FC = () => {
     return <FullScreenSpinner />;
   }
 
-  return <AdminPage />;
+  return element;
 };
 
 const HomeRedirect: React.FC = () => {
@@ -84,7 +85,8 @@ function App() {
               <Route path="/cases" element={<CasesPage />} />
               <Route path="/cases/:caseId" element={<CaseDetailPage />} />
               <Route path="/watchlists" element={<WatchlistsPage />} />
-              <Route path="/admin" element={<AdminRoute />} />
+              <Route path="/admin" element={<AdminRoute element={<AdminPage />} />} />
+              <Route path="/admin/services" element={<AdminRoute element={<AdminServicesSettings />} />} />
             </Route>
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

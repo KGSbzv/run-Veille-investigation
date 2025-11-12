@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { getUsers, updateUserRole, updateUserStatus } from '../services/mockDataService';
 import { User, UserRole } from '../types';
 import Spinner from '../components/ui/Spinner';
 import { BanIcon, CheckCircle2Icon } from '../components/ui/Icons';
+
+// Lazy load AdminServicesSettings
+const AdminServicesSettings = lazy(() => import('./AdminServicesSettings'));
 
 // --- Composant pour la gestion des utilisateurs ---
 const UserManagement: React.FC = () => {
@@ -10,7 +13,7 @@ const UserManagement: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchUsers = async () => {
       const data = await getUsers();
       setUsers(data);
@@ -252,12 +255,18 @@ const AdminPage: React.FC = () => {
       <div className="border-b border-gray-700 mb-6">
           <nav className="-mb-px flex space-x-4">
               <TabButton tabName="users" label="Gestion des Utilisateurs" />
+              <TabButton tabName="services" label="Services & IA / Secrets" />
               <TabButton tabName="architecture" label="Architecture Système" />
           </nav>
       </div>
 
       <div>
         {activeTab === 'users' && <UserManagement />}
+        {activeTab === 'services' && (
+          <Suspense fallback={<div className="flex justify-center items-center h-64"><Spinner size={48}/></div>}>
+            <AdminServicesSettings />
+          </Suspense>
+        )}
         {activeTab === 'architecture' && <SystemArchitectureContent />}
       </div>
     </div>

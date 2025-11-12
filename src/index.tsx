@@ -2,15 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { initializeServices } from './services/servicesManager';
+import { servicesRegistry } from './config/servicesRegistry';
+
+// Initialize services registry
+initializeServices(servicesRegistry);
 
 // Import Web Vitals for production monitoring
 if (import.meta.env.PROD) {
   import('./utils/webVitals').then(({ initWebVitals }) => {
     initWebVitals();
-  }).catch(err => {
-    if (import.meta.env.DEV) {
-      console.warn('⚠️ Web Vitals not available:', err);
-    }
+  }).catch(() => {
+    // Web vitals not available
   });
 }
 
