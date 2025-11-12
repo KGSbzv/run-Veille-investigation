@@ -1,4 +1,4 @@
-import { Case, CaseStatus, CaseFile, CaseEvent, CaseEventType, UserRole, User, Message, MessageRole, Finding, GroundingSource, Alert, AlertSeverity, Watchlist } from '../types';
+import { Case, CaseStatus, CaseFile, CaseEvent, CaseEventType, UserRole, User, Message, MessageRole, Finding, Alert, AlertSeverity, Watchlist } from '../types';
 
 let mockCases: Case[] = [
   { id: '1', title: 'Opération Corbeau Numérique', description: 'Surveillance des activités de désinformation sur les réseaux sociaux visant le processus électoral.', status: CaseStatus.IN_PROGRESS, category: 'Désinformation', tags: ['réseaux sociaux', 'ingérence'], createdBy: 'Analyste Alpha', createdAt: '2023-10-26T10:00:00Z', updatedAt: '2023-10-28T14:30:00Z' },
@@ -128,7 +128,7 @@ export const getEventsForCase = async (caseId: string): Promise<CaseEvent[]> => 
     return new Promise(resolve => setTimeout(() => resolve(mockEvents[caseId] || []), 300));
 };
 
-export const getRAGContextForQuery = async (query: string): Promise<string> => {
+export const getRAGContextForQuery = async (_query: string): Promise<string> => {
     // In a real app, this would perform a vector search in pgvector.
     // Here we just return a random chunk.
     return new Promise(resolve => setTimeout(() => resolve(mockKnowledgeChunks.join('\n\n')), 200));

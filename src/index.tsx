@@ -7,8 +7,11 @@ import './index.css';
 if (import.meta.env.PROD) {
   import('./utils/webVitals').then(({ initWebVitals }) => {
     initWebVitals();
-    console.log('📊 Web Vitals monitoring active');
-  }).catch(err => console.warn('⚠️ Web Vitals not available:', err));
+  }).catch(err => {
+    if (import.meta.env.DEV) {
+      console.warn('⚠️ Web Vitals not available:', err);
+    }
+  });
 }
 
 const rootElement = document.getElementById('root');

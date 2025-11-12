@@ -26,7 +26,7 @@ export const analyzeImageWithGemini = async (base64Image: string, mimeType: stri
         model: 'gemini-2.5-flash',
         contents: { parts: [imagePart, { text: prompt }] },
     });
-    return response.text;
+    return response.text || '';
   } catch (error) {
     console.error("Error analyzing image with Gemini:", error);
     return "Une erreur est survenue lors de l'analyse de l'image.";
@@ -50,7 +50,7 @@ export const getWebSearchResults = async (query: string): Promise<{ text: string
                 title: chunk.web.title,
             }));
         
-        return { text: response.text, sources };
+        return { text: response.text || '', sources };
     } catch (error) {
         console.error("Error with Google Search grounding:", error);
         return { text: "Erreur lors de la recherche web.", sources: [] };
@@ -97,7 +97,7 @@ export const generateReport = async (caseTitle: string, messages: Message[]): Pr
         model: 'gemini-2.5-pro',
         contents: { parts: [{ text: prompt }] },
     });
-    return response.text;
+    return response.text || '## Erreur de Génération\n\nRéponse vide.';
   } catch (error) {
     console.error("Error generating report with Gemini:", error);
     return "## Erreur de Génération\n\nUne erreur est survenue lors de la création du rapport.";

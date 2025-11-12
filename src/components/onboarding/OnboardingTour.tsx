@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { useOnboarding } from '../../hooks/useOnboarding';
 import { XIcon } from '../ui/Icons';
 
